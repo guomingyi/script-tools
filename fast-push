@@ -1,0 +1,110 @@
+#!/bin/bash
+
+PLATFORM=8937
+
+BUILD_TARGET_NAME=`cat ./LA.UM.5.6/LINUX/android/build.ini |grep ^ro.target |cut -d "=" -f 2 |tr -d ' '`
+BUILD_PROJECT_NAME=`cat ./LA.UM.5.6/LINUX/android/build.ini |grep ^ro.project |cut -d "=" -f 2 |tr -d ' '`
+
+
+cmd=$@
+echo "BUILD_TARGET_NAME:$BUILD_TARGET_NAME BUILD_PROJECT_NAME:$BUILD_PROJECT_NAME"
+
+
+if [ -n "$cmd" ] ; then
+
+echo "cmd:$cmd"
+
+adb reboot bootloader
+
+for i in $cmd ; do
+if [ -n "$2" ] ; then
+    echo  "fastboot flash $i $2"
+    fastboot flash $i $2
+else
+    echo  "fastboot flash $i ./LA.UM.5.6/LINUX/android/out/target/product/$BUILD_TARGET_NAME/$i.img"
+    fastboot flash $i ./LA.UM.5.6/LINUX/android/out/target/product/$BUILD_TARGET_NAME/$i.img
+fi
+
+done
+
+fastboot reboot
+exit 0
+
+fi
+
+
+echo  "fastboot flash start.."
+
+adb reboot bootloader
+
+# fastboot flash $parttion $image
+
+# lk
+fastboot flash aboot ./LA.UM.5.6/LINUX/android/out/target/product/$BUILD_TARGET_NAME/emmc_appsboot.mbn
+
+# boot
+fastboot flash boot ./LA.UM.5.6/LINUX/android/out/target/product/$BUILD_TARGET_NAME/boot.img
+
+
+# system
+fastboot flash system ./LA.UM.5.6/LINUX/android/out/target/product/$BUILD_TARGET_NAME/system.img
+
+# userdata
+#fastboot flash userdata ./LA.UM.5.6/LINUX/android/out/target/product/$BUILD_TARGET_NAME/userdata.img
+
+# ?
+fastboot flash persist ./LA.UM.5.6/LINUX/android/out/target/product/$BUILD_TARGET_NAME/persist.img
+
+# recovery
+fastboot flash recovery ./LA.UM.5.6/LINUX/android/out/target/product/$BUILD_TARGET_NAME/recovery.img
+
+# modem
+fastboot flash modem ./MSM${PLATFORM}.LA.2.0/common/build/bin/asic/NON-HLOS.bin
+
+# tz
+fastboot flash tz ./TZ.BF.4.0.5/trustzone_images/build/ms/bin/ZALAANAA/tz.mbn
+
+# sbl1
+fastboot flash sbl1 ./BOOT.BF.3.3/boot_images/build/ms/bin/FAASANAZ/sbl1.mbn
+
+# rpm
+fastboot flash rpm ./RPM.BF.2.2/rpm_proc/build/ms/bin/${PLATFORM}/rpm.mbn
+
+# rpm
+fastboot flash rpm ./RPM.BF.2.2/rpm_proc/build/ms/bin/${PLATFORM}/rpm.mbn
+
+# misc
+fastboot flash misc ./LA.UM.5.6/LINUX/android/device/qcom/$BUILD_TARGET_NAME/res/misc.img
+
+fastboot flash splash ./LA.UM.5.6/LINUX/android/vendor/tinno/$BUILD_TARGET_NAME/trunk/res/splash.img
+
+fastboot flash fsg ./LA.UM.5.6/LINUX/android/device/qcom/$BUILD_TARGET_NAME/res/fsg.img
+
+fastboot flash sec ./MSM${PLATFORM}.LA.2.0/common/sectools/resources/build/fileversion2/sec.dat
+
+fastboot flash mdtp ./LA.UM.5.6/LINUX/android/out/target/product/$BUILD_TARGET_NAME/mdtp.img
+
+echo ""
+echo "Now go to reboot device .."
+fastboot reboot
+
+exit 0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,26 @@
+# 
+用法：
+
+1、编译主程序：
+make;
+
+2、编辑 go_go_go.sh 脚本配置项目、时间: 
+EXT: ./work_timerd v3991 userdebug /home/android/work/prj/3991/master/ 23:00
+
+3、两种方式启动程序：
+# 1 > ./go_go_go.sh 
+# 2 > ./go_go_go.sh -d 
+
+4、关闭程序：
+./work-timer -c
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+
+rm -rf ~/.avc
+find ./ -name "*" |xargs  grep --color -n avc >~/.avc
+audit2allow -i ~/.avc;
+
+
+
+

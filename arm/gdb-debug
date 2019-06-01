@@ -1,0 +1,21 @@
+#!/bin/bash
+#
+# gdb-debug $exec #symbol
+# gdb-debug system/bin/factory /home/android/work/prj/8.0-k100/out/target/product/k400/#symbols/system/bin/factory
+#
+
+adb root;
+adb remount;
+adb push ~/work/script/arm/gdbserver system/bin
+#kill-process $1
+adb forward tcp:1234 tcp:1234
+adb shell gdbserver :1234 $1 &
+
+# gdb debug.
+gdb $2
+
+# target remote :1234
+# b main
+# c
+#
+

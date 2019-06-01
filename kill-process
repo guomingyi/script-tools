@@ -1,0 +1,110 @@
+#!/bin/bash
+
+# for debug.
+#./kill_process com.tinno.encryptmanager
+
+
+process=$1
+
+if [ -n "$process" ] ; then
+  echo -e ""
+  process_info=$(adb shell ps |grep $process)
+
+  if [ -n "$process_info" ] ; then
+    echo -e "Process_Info:"
+  else
+    echo -e "Process:{ $process } not found,exit!"
+    exit 0
+  fi
+
+
+  echo -e "$process_info"
+  echo -e "$process_info" >.p_tmp
+  echo ""
+
+  pid=$(cat .p_tmp |awk '{print $2}')
+
+
+  line2=$(cat .p_tmp |awk '{print $2}' |sed -n '2p')
+  if [ -n "$line2" ] ; then
+    j=1;
+    s=""
+    for i in $pid
+    do
+      p_name=$(cat .p_tmp |awk '{print $9}' |sed -n $j'p')
+      echo "[$j] : $i  $p_name" 
+      s+=$j","
+      let j++;
+    done
+
+  let j--;
+
+  echo ""
+  echo "Please input pid index:[$s]"
+
+
+  loop_ext=1;
+  while [ $loop_ext -eq '1' ]
+  do
+    read index
+    echo "Index:$index"
+
+    if [ $index -gt $j ]; then 
+      echo "Err!"
+      echo "Please input pid index:[$s]"
+    else
+      loop_ext=0
+      echo "loop exit!"
+    fi
+  done
+
+  pid=$(cat .p_tmp |awk '{print $2}' |sed -n $index'p')
+  process_name=$(cat .p_tmp |awk '{print $9}' |sed -n $index'p')
+
+##################################################
+  else
+    process_name=$(cat .p_tmp |awk '{print $9}')
+  fi
+
+
+fi
+
+echo ""
+result=0;
+if [ -n "$pid" ] ; then
+     echo "Start Kill -->: $pid  $process_name"
+     adb shell killall $1
+     adb shell kill -9 $pid
+     result=1
+     echo "Success!"
+else
+    echo "Process Pid not found!"
+fi
+
+echo ""
+exit 0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,115 @@
+#!/bin/bash
+
+LOCAL_PATH=${PWD}
+TARGET_ID=$1
+
+#生成new old的目录，可以自行修改为其他目录
+HOME=~/git_new_old
+
+function space(){
+    echo ""
+    echo ""
+}
+
+function usage(){
+    space
+    echo " 请在git仓库下执行，参数为commit-id,执行前请确保当前仓库clean"
+}
+
+function get_commit(){
+
+    TARGET_ID=$1
+
+    space
+    echo "target commit-id: ${TARGET_ID}"
+    TARGET_ID=`git log |grep commit |grep $1|awk '{print $2}'`
+    space
+    echo "matched commit: "
+    git show $TARGET_ID |grep -A5 $TARGET_ID
+
+    space
+
+}
+
+function copy_files(){
+    files=$1
+    target_dir=$2
+    for file in ${files}
+        do
+            cp -vr ${file} ${target_dir}
+        done
+}
+
+
+function generat(){
+    new_dir=${HOME}/${TARGET_ID}/new
+    old_dir=${HOME}/${TARGET_ID}/old
+    
+
+   echo "git show $TARGET_ID |grep "diff --git" |awk '{print $3}'|sed "s/^a\///"" 
+
+    files=`git show $TARGET_ID |grep "diff --git" |awk '{print $3}'|sed "s/^a\///" `
+#    copy_files ${new_files} ${new_dir}
+    for file in ${files}
+        do
+            if [ ! -d "${new_dir}/${file%/*}" ];then
+                mkdir  -p "${new_dir}/${file%/*}"
+            fi
+            echo "files:$file"
+            cp -v ${file} ${new_dir}/${file}
+        done
+
+    git revert $TARGET_ID -n
+
+    if [ $? != 0 ];then
+        echo "取 old 文件失败...退出..."
+        exit 1
+    fi
+
+
+
+    for file in ${files}
+        do
+            if [ ! -d "${old_dir}/${file%/*}" ];then
+                mkdir  -p "${old_dir}/${file%/*}"
+            fi
+            cp -v ${file} ${old_dir}/${file}
+        done
+    cd ${HOME}/${TARGET_ID}
+    
+    tar czf ${TARGET_ID:0-8}.tar.gz new old
+
+
+    if [ $? != 0 ];then
+        echo "打包new old失败...new old 位于：${HOME}/${TARGET_ID}"
+        exit 1
+    else
+        echo "打包new old完成: ${HOME}/${TARGET_ID}/${TARGET_ID:0-8}.tar.gz"
+        exit 0
+    fi
+
+}
+
+
+space
+echo "current folder: ${LOCAL_PATH}"
+
+git status . > /dev/null
+
+if [ $? != 0 ] || [ "X$1" = "X" ];then
+  usage
+  exit -1
+fi
+
+get_commit ${TARGET_ID}
+echo "generate new old by this commit? (y/n,default:n)"
+
+read gen
+if [ "X$gen" = "Xy" ];then
+    echo "generating...."
+    generat
+else
+    echo "cancel..."
+fi
+
+

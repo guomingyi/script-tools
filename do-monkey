@@ -1,0 +1,28 @@
+#!/bin/bash
+
+if [ "$1" = "-p" ];then 
+kill-process monkey
+adb pull sdcard/mtklog/ ~/log/monkey-test
+adb pull sdcard/Logs/ ~/log/monkey-test
+exit 0
+fi
+
+if [ "$1" = "-c" ];then 
+
+echo "stop"
+kill-process monkey
+
+else
+
+echo "start"
+. ~/work/script/work-timer/my-task.sh
+fi
+
+exit 0
+
+
+
+
+
+
+

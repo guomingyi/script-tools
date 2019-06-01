@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+jadx-version: 0.7.2-unstable
+Class-Path: jfontchooser-1.0.5.jar jadx-cli-0.7.2-unstable.jar jadx-co
+ re-0.7.2-unstable.jar android-5.1.jar dx-1.14.jar logback-classic-1.2
+ .3.jar slf4j-api-1.7.25.jar rsyntaxtextarea-2.6.1.jar gson-2.8.2.jar 
+ image-viewer-1.2.3.jar commons-io-2.6.jar asm-6.0.jar annotations-15.
+ 0.jar cloning-1.9.9.jar jcommander-1.72.jar objenesis-2.6.jar logback
+ -core-1.2.3.jar
+Main-Class: jadx.gui.JadxGUI
+

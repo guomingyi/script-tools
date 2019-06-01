@@ -1,0 +1,94 @@
+#!/bin/bash
+
+#find ./system/core/ -name "*" |xargs  grep --color -n ELAN
+
+
+
+find . -name .repo -prune -o -name .git -prune -o -name out -prune -o -type f -name "*" -print0 | xargs -0 grep --color -n "$@"
+
+
+exit 0
+
+
+
+
+
+
+
+
+
+arg0=$1
+dir=$2
+arg=$@
+count=$#
+keyword=${arg##*$dir}
+
+echo  ""
+#echo  "arg0:$arg0"
+#echo  "dir:$dir"
+#echo  "arg:$arg"
+#echo  "count:$count"
+#echo  "keyword:$keyword"
+
+if [ "$arg0" = "-d" ] ; then 
+  echo "Search: {$keyword } from dir: { $dir }"
+  for i in $keyword ; do
+   find ./$dir -name .repo -prune -o -name .git -prune -o -name out -prune -o -type f -name "*" -print0 | xargs -0 grep --color -n $i
+  done
+else
+  echo "Search Keyword: { $arg }"
+  for i in $arg ; do
+   find ./ -name .repo -prune -o -name .git -prune -o -name out -prune -o -type f -name "*" -print0 | xargs -0 grep --color -n $i
+  done
+fi
+
+exit 0
+
+
+
+
+
+dir=$1
+keystr=$2
+
+if [ -n "$dir" ] ; then
+
+if [ "$dir" = "-e" ] ; then
+  if [ -n "$keystr" ] ; then
+        echo  "Search:$keystr"
+	for i in $keystr
+	do
+	  #find ./ -name .repo -prune -o -name .git -prune -o -name "*" | xargs grep --color -n "$i"
+          find . -name .repo -prune -o -name .git -prune -o -name out -prune -o -type f -name "*" -print0 | xargs -0 grep --color -n "$i"
+	done
+  fi
+
+else
+  if [ -n "$keystr" ] ; then
+    echo  "Dir:$dir"
+    echo  "Search:$keystr"
+    find ./$dir -name .repo -prune -o -name .git -prune -o -name out -prune -o -type f -name "*" -print0 | xargs -0 grep --color -n "$keystr"
+  else
+    keystr=$dir
+    echo  "Search:$keystr"
+    #find ./ -name .repo -prune -o -name .git -prune -o -name "*" | xargs grep --color -n "$keystr"
+    find . -name .repo -prune -o -name .git -prune -o -name out -prune -o -type f -name "*" -print0 | xargs -0 grep --color -n "$keystr"
+  fi
+
+fi
+
+
+else
+  echo "Please input search keyword!"
+fi
+
+exit 0
+
+
+
+
+
+
+
+
+

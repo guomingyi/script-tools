@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# for debug.
+
+
+
+ps -e |grep adb > ~/.tmp
+
+pid=$(cat ~/.tmp |awk '{print $1}')
+
+if [ -n "$pid" ] ; then
+     echo "Start kill adb proc:"
+     echo "$pid"
+     kill -9 $pid
+     echo "Success!"
+else
+    echo "Process Pid not found!"
+fi
+
+exit 0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

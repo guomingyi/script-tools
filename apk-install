@@ -1,0 +1,50 @@
+#!/bin/bash
+
+# for debug.
+#./apk-install $dir
+
+
+dir=$1
+
+if [ -n "$dir" ] ; then
+  echo -e ""
+  apk_path=$(find $dir -name *.apk)
+
+    for i in $apk_path
+    do
+      echo "adb install $i" 
+      adb install $i
+      echo ""
+    done
+
+  echo "done!"
+
+fi
+
+echo ""
+exit 0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

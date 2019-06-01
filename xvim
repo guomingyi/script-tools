@@ -1,0 +1,30 @@
+#!/bin/bash
+
+
+my_path=$PWD
+arg0=$@
+xvim_path=~/.xvim
+
+echo "Start to load source..:$arg0"
+
+
+mkdir -p $xvim_path
+
+cd $xvim_path
+
+echo "cd $xvim_path"
+
+ls -al
+j=1
+    for i in $arg0
+    do
+        echo "ln -s $my_path/$i ./$j"
+        ln -s $my_path/$i ./$j
+        let j++;
+    done
+
+
+exit 0
+
+
+

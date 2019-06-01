@@ -1,0 +1,10 @@
+#!/bin/bash
+
+
+if [ -n "$1" ] ; then
+adb logcat -b all |ag -i "$1"
+else
+adb logcat
+fi
+
+

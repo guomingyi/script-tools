@@ -1,0 +1,11 @@
+# myCrontab.
+# 定时任务.
+# 使用方法，打开终端敲入：crontab myCrontab; crontab -l; sudo /etc/init.d/cron restart;
+
+24 11 * * * source  ~/work/script/myTask
+
+12 11 * * * source  ~/work/script/myTask-build
+
+00 23 * * * source  ~/work/script/myTask-every-day-build
+
+

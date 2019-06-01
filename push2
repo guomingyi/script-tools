@@ -1,0 +1,51 @@
+#!/bin/bash
+
+# for debug.
+#push xxx yyy zzz 
+
+
+push_obj=$@
+system=system
+
+adb root;
+
+adb remount;
+#echo ""
+#echo "-------------adb push start!-----------"
+echo ""
+
+for i in $push_obj
+do
+#  dest=${i##*$system}
+  echo "adb push $i system/lib"
+  adb push $i system/lib
+  echo ""
+done
+
+#echo "-------------adb push done!-----------"
+echo ""
+
+
+
+
+
+exit 0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,22 @@
+#!/bin/bash
+
+#https://github.com/guomingyi2016/chariot.git
+
+#用户名密码：
+#guomingyi2016
+#huihui@515
+
+
+#推送方法：
+
+git add .;
+git commit -am "<$@>";
+git remote add origin https://github.com/guomingyi2016/chariot.git
+git pull origin master;   
+git push -u origin master;
+
+
+#代码下载：
+
+#git clone https://github.com/guomingyi2016/chariot.git
+#git pull origin master; 

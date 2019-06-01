@@ -1,0 +1,17 @@
+#!/bin/bash
+
+if [ -n "$2" ] ; then
+
+find $1 -name "*$2*"
+
+else
+
+find . -name "*$1*"
+
+fi
+
+exit 0
+
+
+
+
