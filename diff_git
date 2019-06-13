@@ -1,0 +1,112 @@
+#!/bin/bash
+
+function echo_red()
+{
+    echo -e "\e[1;31m$*\e[0m"
+    exit -1;
+}
+
+function echo_green()
+{
+    echo -e "\e[1;32m$*\e[0m"
+}
+
+hscode="$1"
+
+mydir=`pwd`
+mydir=${mydir//"/"/"_"}
+destdir=~/tmp/$mydir-$hscode
+new=$destdir/new
+old=$destdir/old
+echo_green "创建保存目录:$destdir"
+
+echo "提取目录文件信息"
+diff=`git diff "$hscode"^ "$hscode" |grep "+++ b/" `
+
+# ${string/substring/replacement}     使用$replacement, 来代替第一个匹配的$substring
+# ${string//substring/replacement}    使用$replacement, 代替所有匹配的$substring
+# ${string/#substring/replacement}    如果$string的前缀匹配$substring, 那么就用$replacement来代替匹配到的$substring
+# ${string/%substring/replacement}    如果$string的后缀匹配$substring, 那么就用$replacement来代替匹配到的$substring
+
+echo 过滤掉不需要的头
+diff=${diff//"+++ b/"/""}
+
+echo "checkout 到当前目标记录."
+git checkout $hscode
+
+echo_green "提取新版本文件.."
+# 开始提取改动后记录文件和目录
+for i in $diff
+do
+    echo 获取文件目录位置
+    let pos=`echo "$i" | awk -F ''/'' '{printf "%d", length($0)-length($NF)}'`
+    j=${i:0:$pos}
+
+    echo 输出目标文件
+    echo "$i"
+    echo 输出目标目录
+    echo "$j"
+
+    echo 如果不存在目标目录则创建，否则跳过
+    if [ ! -d $new/$j ] ; then
+        echo "mkdir -p $new/$j"
+        mkdir -p $new/$j 
+    fi
+
+    echo 拷贝目标文件到目录
+    if [ -f $i ] ; then
+        cp -r -f $i $new/$j
+    fi
+done;
+
+########################################################################
+echo "获取checkout hascode"
+git_log=`git log $hscode |grep commit |head -n 2`
+git_log=${git_log//"commit"/""}
+git_log=${git_log//"$hscode"/""}
+git_log=${git_log//" "/""}
+git_checkout_log=`echo $git_log |tr -d '\n'`
+
+echo "提取旧版本文件.."
+echo "首先恢复改动代码."
+echo "git checkout $git_checkout_log"
+git checkout $git_checkout_log
+sync
+
+echo_green "执行提取"
+for i in $diff
+do
+    # 获取文件目录位置
+    let pos=`echo "$i" | awk -F ''/'' '{printf "%d", length($0)-length($NF)}'`
+    j=${i:0:$pos}
+
+    # 输出目标文件
+    echo "$i"
+    # 输出目标目录
+    echo "$j"
+
+    # 如果不存在目标目录则创建，否则跳过
+    if [ ! -d $old/$j ] ; then
+        echo "mkdir -p $old/$j"
+        mkdir -p $old/$j 
+    fi
+
+    # 拷贝目标文件到目录
+    if [ -f $i ] ; then
+        cp -r -f $i $old/$j
+    fi
+done;
+
+echo_green "提取完成:$destdir"
+
+
+
+
+
+
+
+
+
+
+
+
