@@ -2,7 +2,7 @@
 
 ###############################################################
 path=$(pwd)
-tool_path=~/work/script/tools
+tool_path=~/script/tools
 arg0=$@
 
 

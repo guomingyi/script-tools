@@ -1,11 +1,86 @@
-
 #!/bin/bash
 
-git add --all
+# for debug.
+#push xxx yyy zzz 
 
-git commit -am "<$1>"
+function echo_red()
+{
+    echo -e "\e[1;31m$*\e[0m"
+    exit -1;
+}
 
-git pull origin master
+function echo_green()
+{
+    echo -e "\e[1;32m$*\e[0m"
+}
 
-git push -u origin master
+push_obj=$@
+system=system
+vendor=vendor
+
+adb root
+adb disable-verity 1 > /dev/null
+
+adb remount;
+#echo ""
+#echo "-------------adb push start!-----------"
+echo ""
+
+function pushto() 
+{
+    echo_green "adb push $1 $2"
+    adb push $1 $2
+}
+
+
+for i in $push_obj
+do
+    # echo "i= $i"
+    dest=${i##*\/system}
+
+    # echo "dest1=$dest"
+    if [ "y$dest" == "y$i" ]; then
+        dest=${i##*\/vendor}
+        # echo "dest2=$dest"
+        if [ "y$dest" == "y$i" ]; then
+            dest=${i##*\/product}
+            # echo "dest3=$dest"
+            if [ "y$dest" == "y$i" ]; then
+                echo_red "not found push dest:$i"
+            else
+                pushto $i "/product$dest"
+            fi
+        else
+            pushto $i "/vendor$dest"
+        fi
+    else
+        pushto $i "/system$dest"
+    fi
+done
+
+echo ""
+
+
+
+
+
+exit 0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
