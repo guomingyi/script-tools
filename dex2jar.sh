@@ -2,7 +2,7 @@
 
 ###############################################################
 path=$(pwd)
-tool_path=~/script/tools
+tool_path=~/github/script-tools/tools
 arg0=$@
 
 
@@ -13,8 +13,8 @@ echo "tool_path:$tool_path"
 echo "start dex --> jar"
 for i in $arg0
 do
-    echo "do : $tool_path/dex2jar-2.0/d2j-dex2jar.sh $i"
-    $tool_path/dex2jar-2.0/d2j-dex2jar.sh $i
+    echo "do : $tool_path/dex2jar-2.1/d2j-dex2jar.sh $i"
+    $tool_path/dex2jar-2.1/d2j-dex2jar.sh $i
 done
 
 echo ""
